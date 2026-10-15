@@ -1,0 +1,888 @@
+{% extends "base.html" %}
+
+{% block title %}
+Fashion Recommendations | StyleVerse AI
+{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/fashion.css', v=3) }}">
+
+<section class="fashion-page">
+
+    <div class="container">
+
+        <!-- ==============================================
+             EDITORIAL HERO — inspired by luxury fashion stores
+             Uses existing outfit assets; recommendation logic unchanged.
+        =============================================== -->
+        <section class="fashion-editorial-hero" aria-labelledby="fashion-hero-title">
+            <div class="fashion-hero-copy">
+                <p class="fashion-eyebrow"><span></span> THE STYLEVERSE EDIT</p>
+                <h1 id="fashion-hero-title">Style that feels <em>like you.</em></h1>
+                <p class="fashion-hero-description">Discover your next signature look with curated fashion and recommendations shaped around your personal style.</p>
+                <a class="fashion-hero-cta" href="#fashion-preferences">Find your look <span aria-hidden="true">↗</span></a>
+                <div class="fashion-hero-footnote"><span class="fashion-hero-star">✳</span> PERSONAL STYLE. THOUGHTFULLY CURATED.</div>
+            </div>
+            <div class="fashion-hero-visual" aria-label="Featured StyleVerse outfits">
+                <div class="fashion-hero-image fashion-hero-image-main">
+                    <img src="{{ url_for('static', filename='images/outfits/floral-wrap-dress.jpg') }}" alt="Featured floral wrap dress" onerror="this.style.display='none'">
+                    <span class="fashion-image-label">THE EVERYDAY EDIT</span>
+                </div>
+                <div class="fashion-hero-image fashion-hero-image-small">
+                    <img src="{{ url_for('static', filename='images/outfits/denim-crop-set.jpg') }}" alt="Featured denim crop top and jeans outfit" onerror="this.style.display='none'">
+                </div>
+                <div class="fashion-hero-image fashion-hero-image-third">
+                    <img src="{{ url_for('static', filename='images/outfits/linen-coord-set.jpg') }}" alt="Featured cream linen co-ord outfit" onerror="this.style.display='none'">
+                    <span class="fashion-image-label">THE NEUTRAL EDIT</span>
+                </div>
+                <div class="fashion-hero-stamp"><span>SV</span><small>STYLE<br>VERSE</small></div>
+            </div>
+        </section>
+
+        <div class="fashion-header fashion-section-intro">
+            <h2>Find the look that fits you.</h2>
+            <p>Choose your preferences and let StyleVerse AI find outfits for your occasion.</p>
+        </div>
+
+
+        <!-- ==============================
+             PREFERENCE FORM
+        =============================== -->
+
+        <div class="fashion-form-card" id="fashion-preferences">
+
+            <h2>Tell us your preferences</h2>
+
+            <form id="fashion-form">
+
+
+                <!-- Gender -->
+
+                <div class="form-group">
+
+                    <label for="gender">
+                        👤 Gender
+                    </label>
+
+                    <select id="gender" name="gender">
+
+                        <option value="">
+                            Select Gender
+                        </option>
+
+                        <option value="Female">
+                            Female
+                        </option>
+
+                        <option value="Male">
+                            Male
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Preferred Style -->
+
+                <div class="form-group">
+
+                    <label for="style">
+                        ✨ Preferred Style
+                    </label>
+
+                    <select id="style" name="style">
+
+                        <option value="">
+                            Select Style
+                        </option>
+
+                        <option value="Casual">
+                            Casual
+                        </option>
+
+                        <option value="Smart Casual">
+                            Smart Casual
+                        </option>
+
+                        <option value="Formal">
+                            Formal
+                        </option>
+
+                        <option value="Streetwear">
+                            Streetwear
+                        </option>
+
+                        <option value="Traditional">
+                            Traditional
+                        </option>
+
+                        <option value="Sporty">
+                            Sporty
+                        </option>
+
+                        <option value="Evening">
+                            Evening
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Occasion -->
+
+                <div class="form-group">
+
+                    <label for="occasion">
+                        🎉 Occasion
+                    </label>
+
+                    <select id="occasion" name="occasion">
+
+                        <option value="">
+                            Select Occasion
+                        </option>
+
+                        <option value="College">
+                            College
+                        </option>
+
+                        <option value="Office">
+                            Office
+                        </option>
+
+                        <option value="Party">
+                            Party
+                        </option>
+
+                        <option value="Wedding">
+                            Wedding
+                        </option>
+
+                        <option value="Festival">
+                            Festival
+                        </option>
+
+                        <option value="Outing">
+                            Outing
+                        </option>
+
+                        <option value="Travel">
+                            Travel
+                        </option>
+
+                        <option value="Brunch">
+                            Brunch
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Season -->
+
+                <div class="form-group">
+
+                    <label for="season">
+                        🌤️ Season
+                    </label>
+
+                    <select id="season" name="season">
+
+                        <option value="">
+                            Select Season
+                        </option>
+
+                        <option value="Summer">
+                            Summer
+                        </option>
+
+                        <option value="Winter">
+                            Winter
+                        </option>
+
+                        <option value="Spring">
+                            Spring
+                        </option>
+
+                        <option value="Autumn">
+                            Autumn
+                        </option>
+
+                        <option value="All Season">
+                            All Season
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Outfit Type -->
+
+                <div class="form-group">
+
+                    <label for="outfit_type">
+                        👗 Outfit Type
+                    </label>
+
+                    <select id="outfit_type"
+                            name="outfit_type">
+
+                        <option value="">
+                            Select Outfit Type
+                        </option>
+
+                        <option value="Western">
+                            Western
+                        </option>
+
+                        <option value="Indian">
+                            Indian
+                        </option>
+
+                        <option value="Indo-Western">
+                            Indo-Western
+                        </option>
+
+                        <option value="Dress">
+                            Dress
+                        </option>
+
+                        <option value="Top & Jeans">
+                            Top & Jeans
+                        </option>
+
+                        <option value="Ethnic Wear">
+                            Ethnic Wear
+                        </option>
+
+                        <option value="Co-ord Set">
+                            Co-ord Set
+                        </option>
+
+                        <option value="Suit">
+                            Suit
+                        </option>
+
+                        <option value="Activewear">
+                            Activewear
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Favorite Color -->
+
+                <div class="form-group">
+
+                    <label for="color">
+                        🎨 Favorite Color
+                    </label>
+
+                    <select id="color" name="color">
+
+                        <option value="">
+                            Select Color
+                        </option>
+
+                        <option value="Black">
+                            Black
+                        </option>
+
+                        <option value="White">
+                            White
+                        </option>
+
+                        <option value="Red">
+                            Red
+                        </option>
+
+                        <option value="Pink">
+                            Pink
+                        </option>
+
+                        <option value="Blue">
+                            Blue
+                        </option>
+
+                        <option value="Navy">
+                            Navy
+                        </option>
+
+                        <option value="Green">
+                            Green
+                        </option>
+
+                        <option value="Yellow">
+                            Yellow
+                        </option>
+
+                        <option value="Purple">
+                            Purple
+                        </option>
+
+                        <option value="Brown">
+                            Brown
+                        </option>
+
+                        <option value="Beige">
+                            Beige
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Preferred Fit -->
+
+                <div class="form-group">
+
+                    <label for="fit">
+                        👕 Preferred Fit
+                    </label>
+
+                    <select id="fit" name="fit">
+
+                        <option value="">
+                            Select Fit
+                        </option>
+
+                        <option value="Regular">
+                            Regular
+                        </option>
+
+                        <option value="Slim">
+                            Slim
+                        </option>
+
+                        <option value="Oversized">
+                            Oversized
+                        </option>
+
+                        <option value="Relaxed">
+                            Relaxed
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Recommendation Button -->
+
+                <button
+                    type="button"
+                    class="recommend-button"
+                    id="recommend-button">
+
+                    ✨ Get My Recommendations →
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- ==============================
+             LOADING MESSAGE
+        =============================== -->
+
+        <div id="recommendation-loading"
+             class="recommendation-loading"
+             style="display: none;">
+
+            <div class="loading-spinner"></div>
+
+            <p>
+                ✨ Finding the best outfits for you...
+            </p>
+
+        </div>
+
+
+        <!-- ==============================
+             RECOMMENDATIONS
+        =============================== -->
+
+        <div id="recommendations-section"
+             class="recommendations-section"
+             style="display: none;">
+
+            <div class="recommendations-header">
+
+                <h2>
+                    ✨ Your Personalized Recommendations
+                </h2>
+
+                <p>
+                    Based on your selected preferences
+                </p>
+
+            </div>
+
+
+            <div id="recommendations-grid"
+                 class="outfit-grid">
+
+                <!-- Recommendation cards
+                     will be inserted by JavaScript -->
+
+            </div>
+
+        </div>
+
+
+        <!-- ==============================
+             ALL AVAILABLE OUTFITS
+        =============================== -->
+
+        <div class="outfits-section">
+
+            <h2>Available Outfits</h2>
+
+            <div class="outfit-grid">
+
+                {% for outfit in outfits %}
+
+                <div class="outfit-card">
+
+                    {% if outfit['image'] %}
+
+                    <img
+                        src="{{ url_for(
+                            'static',
+                            filename='images/outfits/' + outfit['image']
+                        ) }}"
+                        alt="{{ outfit['name'] }}"
+                    >
+
+                    {% endif %}
+
+                    
+<div class="outfit-info">
+
+    <div class="outfit-title-row">
+        <h3>{{ outfit['name'] }}</h3>
+
+        <form
+            method="POST"
+            action="{{ url_for('fashion.add_to_wishlist', outfit_id=outfit['id']) }}"
+            class="wishlist-form available-wishlist-form"
+        >
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+            {% set is_saved = outfit['id'] in saved_outfit_ids %}
+
+            <button
+                type="submit"
+                class="wishlist-button available-heart-only {{ 'is-saved' if is_saved else '' }}"
+                aria-label="{{ 'Already in Wishlist' if is_saved else 'Save to Wishlist' }}"
+                title="{{ 'Already in Wishlist' if is_saved else 'Save to Wishlist' }}"
+                {% if is_saved %}disabled{% endif %}
+            >
+                <span class="wishlist-heart" aria-hidden="true">{{ '♥' if is_saved else '♡' }}</span>
+            </button>
+        </form>
+    </div>
+
+    <p>
+        {{ outfit['category'] }}
+    </p>
+
+    <div class="outfit-tags">
+        <span>{{ outfit['style'] }}</span>
+        <span>{{ outfit['occasion'] }}</span>
+    </div>
+
+</div>
+
+                </div>
+
+                {% else %}
+
+                <p>
+                    No outfits found in the database.
+                </p>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================
+     FASHION RECOMMENDATION JAVASCRIPT
+========================================= -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+
+    const button = document.getElementById("recommend-button");
+    const loading = document.getElementById("recommendation-loading");
+    const resultsSection = document.getElementById("recommendations-section");    
+    const resultsContainer = document.getElementById("recommendations-grid");
+
+    
+const savedOutfitIds = new Set(
+    JSON.parse(
+        document.getElementById("saved-outfit-ids").textContent
+    )
+);
+
+
+    if (!button) {
+        console.error("Recommendation button not found.");
+        return;
+    }
+
+    button.addEventListener("click", async function () {
+
+        try {
+
+            /* ----------------------------------
+               Get values from the fashion form
+            ---------------------------------- */
+
+            const gender = document.getElementById("gender")?.value || "";
+            const style = document.getElementById("style")?.value || "";
+            const occasion = document.getElementById("occasion")?.value || "";
+            const season = document.getElementById("season")?.value || "";
+            const category = document.getElementById("outfit_type")?.value || "";            
+            const color = document.getElementById("color")?.value || "";
+            const fit = document.getElementById("fit")?.value || "";
+
+            /* ----------------------------------
+               Validate gender
+            ---------------------------------- */
+
+            if (!gender) {
+                alert("Please select your gender.");
+                return;
+            }
+
+            /* ----------------------------------
+               Show loading
+            ---------------------------------- */
+
+            if (loading) {
+                loading.style.display = "block";
+            }
+
+            if (resultsContainer) {
+                resultsContainer.innerHTML = "";
+            }
+
+            /* ----------------------------------
+               Send preferences to Flask
+            ---------------------------------- */
+
+            const response = await fetch("/fashion/recommend", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    gender: gender,
+                    style: style,
+                    occasion: occasion,
+                    season: season,
+                    category: category,
+                    color: color,
+                    fit: fit
+                })
+            });
+
+            const data = await response.json();
+
+            /* ----------------------------------
+               Hide loading
+            ---------------------------------- */
+
+            if (loading) {
+                loading.style.display = "none";
+            }
+
+            /* ----------------------------------
+               Handle server error
+            ---------------------------------- */
+
+            if (!response.ok || !data.success) {
+                alert(data.message || "Unable to generate recommendations.");
+                return;
+            }
+
+            /* ----------------------------------
+               Display recommendations
+            ---------------------------------- */
+
+            displayRecommendations(data.recommendations);
+
+            if (resultsSection) {
+                resultsSection.style.display = "block";
+
+                resultsSection.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+            }
+
+        } catch (error) {
+
+            console.error("Recommendation error:", error);
+
+            if (loading) {
+                loading.style.display = "none";
+            }
+
+            alert("Something went wrong. Please try again.");
+        }
+    });
+
+
+    /* ==========================================
+       DISPLAY RECOMMENDATION CARDS
+    ========================================== */
+
+    
+function displayRecommendations(recommendations) {
+    resultsContainer.innerHTML = "";
+
+    if (!Array.isArray(recommendations) || recommendations.length === 0) {
+        resultsContainer.innerHTML = `
+            <div class="no-recommendations">
+                <h3>No matching outfits found 😔</h3>
+                <p>Try changing your preferences to discover more styles.</p>
+            </div>
+        `;
+        resultsSection.style.display = "block";
+        return;
+    }
+
+    // Safely display text received from the database.
+    function escapeRecommendationHTML(value) {
+        return String(value ?? "").replace(/[&<>"']/g, function (character) {
+            const entities = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            };
+
+            return entities[character];
+        });
+    }
+
+    recommendations.forEach(function (outfit) {
+        const isSaved = savedOutfitIds.has(Number(outfit.id));
+        const card = document.createElement("div");
+        card.className = "outfit-card recommendation-card";
+
+        const match = Math.min(
+            100,
+            Math.max(0, Number(outfit.score) || 0)
+        );
+
+        const name = escapeRecommendationHTML(outfit.name);
+        const category = escapeRecommendationHTML(outfit.category);
+        const style = escapeRecommendationHTML(outfit.style);
+        const color = escapeRecommendationHTML(outfit.color);
+        const occasion = escapeRecommendationHTML(outfit.occasion);
+        const season = escapeRecommendationHTML(outfit.season);
+        const fit = escapeRecommendationHTML(outfit.fit);
+        const description = escapeRecommendationHTML(outfit.description);
+        const why = escapeRecommendationHTML(
+            outfit.why || "Selected based on your preferences."
+        );
+
+        const imageName = String(outfit.image ?? "");
+
+        // Use the existing outfit image folder.
+        const imageURL = "/static/images/outfits/" +
+            imageName.split("/").pop().split("\\").pop();
+
+        card.innerHTML = `
+            <div class="recommendation-image-wrapper">
+                <img
+                    class="recommendation-image"
+                    src="${escapeRecommendationHTML(imageURL)}"
+                    alt="${name}"
+                    loading="lazy"
+                >
+
+                <span class="match-badge">
+                    ${match}% Match
+                </span>
+            </div>
+
+            <div class="outfit-info recommendation-info">
+                <h3 class="recommendation-title">${name}</h3>
+
+                <p class="recommendation-description">
+                    ${description || "Discover a look that suits your style."}
+                </p>
+
+                <div class="recommendation-details">
+                    ${category ? `<span><strong>Type:</strong> ${category}</span>` : ""}
+                    ${style ? `<span><strong>Style:</strong> ${style}</span>` : ""}
+                    ${color ? `<span><strong>Color:</strong> ${color}</span>` : ""}
+                    ${occasion ? `<span><strong>Occasion:</strong> ${occasion}</span>` : ""}
+                    ${season ? `<span><strong>Season:</strong> ${season}</span>` : ""}
+                    ${fit ? `<span><strong>Fit:</strong> ${fit}</span>` : ""}
+                </div>
+
+                
+                <div class="recommendation-reason">
+                    <h4>✨ Why this outfit?</h4>
+                    <p>${why}</p>
+                </div>
+
+                <form
+                    method="POST"
+                    action="/fashion/wishlist/add/${Number(outfit.id)}"
+                    class="wishlist-form"
+                >
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="{{ csrf_token() }}"
+                    >
+
+                    <button
+                        type="submit"
+                        class="wishlist-button ${isSaved ? 'is-saved' : ''}"
+                        aria-label="${isSaved ? 'Already in Wishlist' : 'Save to Wishlist'}"
+                        title="${isSaved ? 'Already in Wishlist' : 'Save to Wishlist'}"
+                        ${isSaved ? 'disabled' : ''}
+                    >
+                        <span class="wishlist-heart" aria-hidden="true">${isSaved ? '♥' : '♡'}</span>
+                    </button>
+
+
+
+                </form>
+            </div>
+        `;
+
+        const image = card.querySelector(".recommendation-image");
+
+        image.addEventListener("error", function () {
+            this.alt = "Outfit image unavailable";
+            this.style.display = "none";
+        });
+
+        resultsContainer.appendChild(card);
+    });
+
+    resultsSection.style.display = "block";
+}
+
+
+});
+</script>
+
+<script type="application/json" id="saved-outfit-ids">{{ saved_outfit_ids | default([]) | list | tojson }}</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const scrollKey = "styleverse_fashion_scroll";
+    const savedPosition = sessionStorage.getItem(scrollKey);
+
+    // Restore the previous scroll position after redirect.
+    if (savedPosition !== null) {
+        window.addEventListener("load", function () {
+            window.scrollTo(0, Number(savedPosition));
+            sessionStorage.removeItem(scrollKey);
+        }, { once: true });
+    }
+
+    // Remember the position before saving an outfit.
+    document.querySelectorAll(".wishlist-form").forEach(function (form) {
+        form.addEventListener("submit", function () {
+            sessionStorage.setItem(scrollKey, String(window.scrollY));
+        });
+    });
+});
+</script>
+
+
+<script>
+document.addEventListener("submit", async function (event) {
+    const form = event.target;
+
+    if (!form.matches(".wishlist-form")) {
+        return;
+    }
+
+    event.preventDefault();
+
+    const button = form.querySelector(".wishlist-button");
+    const heart = form.querySelector(".wishlist-heart");
+
+    if (!button || button.disabled) {
+        return;
+    }
+
+    button.disabled = true;
+
+    try {
+        const response = await fetch(form.action, {
+            method: "POST",
+            body: new FormData(form),
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            alert(data.message || "Could not save this outfit.");
+            button.disabled = false;
+            return;
+        }
+
+        // Update the heart immediately.
+        button.classList.add("is-saved");
+        button.title = "Already in Wishlist";
+        button.setAttribute("aria-label", "Already in Wishlist");
+
+        if (heart) {
+            heart.textContent = "♥";
+        }
+
+        // Update the saved IDs used by the recommendation cards.
+        if (typeof savedOutfitIds !== "undefined") {
+            savedOutfitIds.add(Number(data.outfit_id));
+        }
+
+        // Show a small confirmation.
+        button.title = data.message;
+    } catch (error) {
+        console.error("Wishlist error:", error);
+        alert("Something went wrong. Please try again.");
+        button.disabled = false;
+    }
+}, true);
+</script>
+
+{% endblock %}

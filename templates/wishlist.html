@@ -1,0 +1,178 @@
+
+{% extends "base.html" %}
+
+{% block title %}My Wishlist | StyleVerse AI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/fashion.css') }}">
+
+<style>
+    .wishlist-page {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 35px 24px 60px;
+    }
+
+    .wishlist-page .wishlist-heading {
+        margin-bottom: 28px;
+    }
+
+    .wishlist-page .wishlist-heading h1 {
+        font-size: 34px;
+        color: #352239;
+        margin-bottom: 8px;
+    }
+
+    .wishlist-page .wishlist-heading p {
+        color: #786d7c;
+        margin: 0;
+    }
+
+    .wishlist-page .wishlist-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 26px;
+        align-items: start;
+    }
+
+    .wishlist-page .wishlist-card {
+        min-width: 0;
+        overflow: hidden;
+        background: #fff;
+        border: 1px solid #eee5ef;
+        border-radius: 18px;
+        box-shadow: 0 6px 24px rgba(64, 35, 65, .08);
+        transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .wishlist-page .wishlist-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 14px 30px rgba(64, 35, 65, .14);
+    }
+
+    .wishlist-page .wishlist-image {
+        display: block;
+        width: 100%;
+        height: 310px;
+        object-fit: contain;
+        background: #faf6fa;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    .wishlist-page .wishlist-info {
+        padding: 20px;
+    }
+
+    .wishlist-page .wishlist-info h2 {
+        margin: 0 0 10px;
+        color: #352239;
+        font-size: 20px;
+    }
+
+    .wishlist-page .wishlist-info p {
+        color: #786d7c;
+        font-size: 14px;
+        line-height: 1.7;
+        margin: 7px 0;
+    }
+
+    .wishlist-page .remove-wishlist-button {
+        width: 100%;
+        margin-top: 14px;
+        padding: 12px;
+        border: 1px solid #f0d4e3;
+        border-radius: 10px;
+        background: #fff2f7;
+        color: #a13d70;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .wishlist-page .remove-wishlist-button:hover {
+        background: #a13d70;
+        color: #fff;
+    }
+
+    @media (max-width: 850px) {
+        .wishlist-page .wishlist-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 560px) {
+        .wishlist-page .wishlist-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .wishlist-page .wishlist-heading h1 {
+            font-size: 28px;
+        }
+    }
+</style>
+{% endblock %}
+
+
+
+{% block content %}
+<section class="wishlist-page">
+
+    <div class="wishlist-heading">
+        <h1>❤️ My Wishlist</h1>
+        <p>Your favourite outfits, saved in one place.</p>
+    </div>
+
+    {% if outfits %}
+    <div class="wishlist-grid">
+
+        {% for outfit in outfits %}
+        <article class="wishlist-card">
+
+            <img
+                class="wishlist-image"
+                src="{{ url_for('static', filename='images/outfits/' ~ outfit['image']) }}"
+                alt="{{ outfit['name'] }}"
+                loading="lazy"
+            >
+
+            <div class="wishlist-info">
+                <h2>{{ outfit['name'] }}</h2>
+
+                <p>{{ outfit['description'] or 'A look saved just for you.' }}</p>
+                <p><strong>Style:</strong> {{ outfit['style'] }}</p>
+                <p><strong>Color:</strong> {{ outfit['color'] }}</p>
+                <p><strong>Occasion:</strong> {{ outfit['occasion'] }}</p>
+
+                <form
+                    method="POST"
+                    action="{{ url_for('fashion.remove_from_wishlist', outfit_id=outfit['id']) }}"
+                >
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="{{ csrf_token() }}"
+                    >
+
+                    <button type="submit" class="remove-wishlist-button">
+                        💔 Remove from Wishlist
+                    </button>
+                </form>
+            </div>
+
+        </article>
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+    <div class="wishlist-empty">
+        <h2>Your wishlist is empty 💕</h2>
+        <p>Explore fashion and save your favourite outfits.</p>
+        <a href="{{ url_for('fashion.fashion_home') }}">
+            Explore Fashion →
+        </a>
+    </div>
+    {% endif %}
+
+</section>
+{% endblock %}

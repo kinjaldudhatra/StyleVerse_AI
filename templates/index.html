@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}StyleVerse AI | Discover Your Style with AI{% endblock %}
+
+{% block content %}
+<section class="hero hero-premium">
+    <div class="hero-orb hero-orb-one" aria-hidden="true"></div>
+    <div class="hero-orb hero-orb-two" aria-hidden="true"></div>
+
+    <div class="container hero-inner hero-premium-inner">
+        <div class="hero-copy hero-premium-copy">
+            <span class="hero-eyebrow"><span class="eyebrow-sparkle" aria-hidden="true">✦</span> YOUR PERSONAL AI STYLE STUDIO</span>
+            <h1>Style that feels <span class="hero-heading-accent">uniquely you.</span></h1>
+            <p class="hero-subtitle">Discover outfits, explore beauty looks, and try something new with a little help from AI.</p>
+
+            <div class="hero-actions">
+                <a class="btn btn-primary hero-main-cta" href="{{ url_for('fashion.fashion_home') }}">Explore Fashion <span aria-hidden="true">↗</span></a>
+                <a class="hero-secondary-link" href="#features">Discover the experience <span aria-hidden="true">↓</span></a>
+            </div>
+
+            <div class="hero-trust-row" aria-label="StyleVerse features">
+                <span><span class="trust-dot" aria-hidden="true"></span> Personalised ideas</span>
+                <span><span class="trust-dot" aria-hidden="true"></span> Your style, your way</span>
+            </div>
+        </div>
+
+        <div class="hero-visual" aria-label="A curated palette of fashion-inspired colours">
+            <div class="hero-visual-glow" aria-hidden="true"></div>
+            <div class="style-board-label"><span class="style-board-label-dot"></span> THE STYLE EDIT <span>01 / 04</span></div>
+            <div class="swatch-board swatch-board-premium" aria-hidden="true">
+                <div class="swatch swatch-tall" style="--swatch: linear-gradient(155deg, #76538b, #392443);"><span>Plum Mood</span></div>
+                <div class="swatch" style="--swatch: linear-gradient(145deg, #f0c7c9, #b96f86);"><span>Rose</span></div>
+                <div class="swatch" style="--swatch: linear-gradient(145deg, #eadcc8, #b9a185);"><span>Soft Sand</span></div>
+                <div class="swatch swatch-wide" style="--swatch: linear-gradient(135deg, #303b62, #172039);"><span>Midnight</span></div>
+                <div class="swatch" style="--swatch: linear-gradient(145deg, #d97870, #9d3f50);"><span>Warm Rouge</span></div>
+                <div class="swatch" style="--swatch: linear-gradient(145deg, #a7aa82, #596143);"><span>Olive</span></div>
+                <div class="swatch" style="--swatch: linear-gradient(145deg, #f4dfac, #c9a55f);"><span>Champagne</span></div>
+            </div>
+            <div class="floating-style-note floating-style-note-top">
+                <span class="floating-note-icon" aria-hidden="true">✦</span>
+                <span><strong>Your style, refined</strong><small>Ideas inspired by you</small></span>
+            </div>
+            <div class="floating-style-note floating-style-note-bottom">
+                <span class="floating-note-avatar" aria-hidden="true">✧</span>
+                <span><strong>Made to mix & match</strong><small>Find your next favourite</small></span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="features features-premium" id="features">
+    <div class="container">
+        <div class="section-heading-row">
+            <div>
+                <span class="section-eyebrow">EXPLORE STYLEVERSE</span>
+                <h2>Your next look starts here.</h2>
+            </div>
+            <p class="section-intro">A thoughtful space for fashion discovery, beauty inspiration, and virtual styling.</p>
+        </div>
+
+        <div class="feature-grid feature-grid-premium">
+            <a class="feature-card feature-card-premium feature-card-fashion" href="{{ url_for('fashion.fashion_home') }}">
+                <div class="feature-card-topline"><span class="feature-number">01</span><span class="feature-card-arrow" aria-hidden="true">↗</span></div>
+                <div class="feature-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3 4 6l2 4 2-1v12h8V9l2 1 2-4-5-3a3.2 3.2 0 0 1-6 0Z"/></svg>
+                </div>
+                <h3>AI Fashion Recommendations</h3>
+                <p>Find outfit ideas based on your preferred style, colours, occasion, and fit.</p>
+                <span class="feature-card-link">Find your look <span aria-hidden="true">→</span></span>
+            </a>
+
+            <article class="feature-card feature-card-premium feature-card-makeup">
+                <div class="feature-card-topline"><span class="feature-number">02</span><span class="feature-card-symbol" aria-hidden="true">✧</span></div>
+                <div class="feature-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21v-7h6v7"/><path d="M10 14V9h4v5"/><path d="M11 9V3h2v6"/></svg>
+                </div>
+                <h3>Personalised Makeup</h3>
+                <p>Explore colour inspiration and beauty ideas for the look you want to create.</p>
+                <span class="feature-card-note">Beauty, your way</span>
+            </article>
+
+            <a class="feature-card feature-card-premium feature-card-tryon" href="{{ url_for('main.virtual_try_on') }}">
+                <div class="feature-card-topline"><span class="feature-number">03</span><span class="feature-card-arrow" aria-hidden="true">↗</span></div>
+                <div class="feature-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><circle cx="12" cy="10" r="2.5"/><path d="M7.5 17c.8-2.2 2.5-3.2 4.5-3.2s3.7 1 4.5 3.2"/></svg>
+                </div>
+                <h3>Virtual Try-On</h3>
+                <p>Experiment with your look and explore the virtual try-on experience.</p>
+                <span class="feature-card-link">Try it out <span aria-hidden="true">→</span></span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="style-note-section">
+    <div class="container">
+        <div class="style-note-glass">
+            <span class="style-note-star" aria-hidden="true">✦</span>
+            <div>
+                <span class="section-eyebrow">A LITTLE STYLE REMINDER</span>
+                <h2>There are no rules to your style.</h2>
+                <p>Use inspiration as a starting point. The best look is the one that feels like you.</p>
+            </div>
+            <a class="style-note-link" href="{{ url_for('fashion.fashion_home') }}" aria-label="Explore fashion recommendations">Explore looks <span aria-hidden="true">↗</span></a>
+        </div>
+    </div>
+</section>
+{% endblock %}

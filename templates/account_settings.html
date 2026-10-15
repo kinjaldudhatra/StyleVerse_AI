@@ -1,0 +1,175 @@
+
+{% extends "base.html" %}
+
+{% block title %}Account Settings | StyleVerse AI{% endblock %}
+
+{% block content %}
+<section class="account-settings-page">
+    <div class="account-settings-container">
+        <div class="settings-heading">
+            <span class="settings-icon">🔐</span>
+            <h1>Account Settings</h1>
+            <p>Keep your StyleVerse AI account secure.</p>
+        </div>
+
+        <div class="settings-card">
+            <h2>Change Password</h2>
+            <p class="settings-description">
+                Enter your current password and choose a new one.
+            </p>
+
+            <form method="POST" action="{{ url_for('account_settings.index') }}">
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}"
+                >
+
+                <label for="current_password">Current Password</label>
+                <input
+                    id="current_password"
+                    name="current_password"
+                    type="password"
+                    autocomplete="current-password"
+                    required
+                >
+
+                <label for="new_password">New Password</label>
+                <input
+                    id="new_password"
+                    name="new_password"
+                    type="password"
+                    minlength="8"
+                    maxlength="128"
+                    autocomplete="new-password"
+                    required
+                >
+                <small>Use at least 8 characters.</small>
+
+                <label for="confirm_password">Confirm New Password</label>
+                <input
+                    id="confirm_password"
+                    name="confirm_password"
+                    type="password"
+                    minlength="8"
+                    maxlength="128"
+                    autocomplete="new-password"
+                    required
+                >
+
+                <button type="submit" class="settings-save-button">
+                    Update Password 🔒
+                </button>
+            </form>
+        </div>
+
+        <a class="settings-back-link" href="{{ url_for('profile.index') }}">
+            ← Back to My Profile
+        </a>
+    </div>
+</section>
+
+<style>
+.account-settings-page {
+    min-height: 65vh;
+    padding: 45px 20px;
+    background: linear-gradient(135deg, #fff7fb, #f8f5ff);
+}
+
+.account-settings-container {
+    max-width: 620px;
+    margin: 0 auto;
+}
+
+.settings-heading {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.settings-icon {
+    font-size: 38px;
+}
+
+.settings-heading h1 {
+    color: #543565;
+    margin: 10px 0;
+}
+
+.settings-heading p,
+.settings-description {
+    color: #716779;
+    line-height: 1.6;
+}
+
+.settings-card {
+    padding: 28px;
+    background: white;
+    border: 1px solid #f0dff5;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(50, 30, 60, 0.08);
+}
+
+.settings-card h2 {
+    color: #543565;
+    margin-top: 0;
+}
+
+.settings-card label {
+    display: block;
+    margin: 18px 0 8px;
+    color: #543565;
+    font-weight: 600;
+}
+
+.settings-card input {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e5c9e5;
+    border-radius: 10px;
+    font: inherit;
+}
+
+.settings-card input:focus {
+    outline: 2px solid #d9a7ed;
+    outline-offset: 2px;
+}
+
+.settings-card small {
+    display: block;
+    margin-top: 6px;
+    color: #716779;
+}
+
+.settings-save-button {
+    width: 100%;
+    margin-top: 25px;
+    padding: 13px;
+    border: 0;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #a94bd0, #e56eb0);
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.settings-save-button:hover {
+    opacity: 0.9;
+}
+
+.settings-back-link {
+    display: inline-block;
+    margin-top: 22px;
+    color: #8b36a5;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+@media (max-width: 600px) {
+    .settings-card {
+        padding: 20px;
+    }
+}
+</style>
+{% endblock %}

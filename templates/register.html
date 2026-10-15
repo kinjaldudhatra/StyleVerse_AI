@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Create account | StyleVerse AI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-card">
+        <h1>Create your account</h1>
+        <p class="auth-intro">Join StyleVerse AI to get fashion and beauty picks made for you.</p>
+
+        <form method="post" action="{{ url_for('auth.register') }}" data-auth-form>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <div class="form-group">
+                <label for="name">Full name</label>
+                <input type="text" id="name" name="name" value="{{ form_values.get('name', '') }}" autocomplete="name"
+                       maxlength="60" required {% if 'name' in error_fields %}aria-invalid="true"{% endif %}>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="{{ form_values.get('email', '') }}" autocomplete="email"
+                       maxlength="254" required {% if 'email' in error_fields %}aria-invalid="true"{% endif %}>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-field">
+                    <input type="password" id="password" name="password" autocomplete="new-password"
+                           minlength="8" maxlength="128" required aria-describedby="password-rules"
+                           {% if 'password' in error_fields %}aria-invalid="true"{% endif %}>
+                    <button class="toggle-password" type="button" data-target="password" aria-controls="password" aria-pressed="false">Show</button>
+                </div>
+                <ul class="password-rules" id="password-rules">
+                    <li data-rule="length">At least 8 characters</li>
+                    <li data-rule="letter">At least one letter</li>
+                    <li data-rule="number">At least one number</li>
+                </ul>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password">Confirm password</label>
+                <div class="password-field">
+                    <input type="password" id="confirm_password" name="confirm_password" autocomplete="new-password"
+                           maxlength="128" required aria-describedby="confirm-feedback"
+                           {% if 'confirm_password' in error_fields %}aria-invalid="true"{% endif %}>
+                    <button class="toggle-password" type="button" data-target="confirm_password" aria-controls="confirm_password" aria-pressed="false">Show</button>
+                </div>
+                <p class="field-feedback" id="confirm-feedback" aria-live="polite"></p>
+            </div>
+
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender" required {% if 'gender' in error_fields %}aria-invalid="true"{% endif %}>
+                    <option value="" disabled {% if not form_values.get('gender') %}selected{% endif %}>Select an option</option>
+                    {% for value, label in genders.items() %}
+                    <option value="{{ value }}" {% if form_values.get('gender') == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="auth-actions">
+                <button class="btn btn-primary" type="submit">Create Account</button>
+            </div>
+        </form>
+
+        <p class="auth-switch">Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a></p>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

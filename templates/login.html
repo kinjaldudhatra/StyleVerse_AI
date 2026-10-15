@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Log in | StyleVerse AI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-card">
+        <h1>Welcome back</h1>
+        <p class="auth-intro">Log in to continue with your style.</p>
+
+        <form method="post" action="{{ url_for('auth.login') }}" data-auth-form>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="next" value="{{ next_url }}">
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="{{ email }}" autocomplete="email" required
+                       {% if 'email' in error_fields %}aria-invalid="true"{% endif %}>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-field">
+                    <input type="password" id="password" name="password" autocomplete="current-password" required
+                           {% if 'password' in error_fields %}aria-invalid="true"{% endif %}>
+                    <button class="toggle-password" type="button" data-target="password" aria-controls="password" aria-pressed="false">Show</button>
+                </div>
+            </div>
+
+            <div class="auth-actions">
+                <button class="btn btn-primary" type="submit">Login</button>
+                <a class="btn btn-secondary" href="{{ url_for('auth.register') }}">Create Account</a>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

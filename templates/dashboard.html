@@ -1,0 +1,137 @@
+
+{% extends "base.html" %}
+
+{% block title %}Dashboard | StyleVerse AI{% endblock %}
+
+{% block content %}
+<section class="dashboard-section">
+    <div class="container">
+
+        <h1>Welcome, {{ user['name'] }}</h1>
+        <p class="hero-subtitle">
+            You are logged in. Welcome to your StyleVerse AI dashboard!
+        </p>
+
+        <!-- Dashboard Feature Cards -->
+        <div class="dashboard-feature-grid">
+
+            
+            <!-- My Try-On History Card -->
+            <div class="dashboard-feature-card">
+                <div class="dashboard-feature-icon">👗</div>
+
+                <h2>My Try-On History</h2>
+
+                <p>
+                    Explore your previous AI-generated outfits,
+                    view your looks, and download your favorite results.
+                </p>
+
+                <div class="tryon-total">
+                    <span class="tryon-total-number">{{ tryon_count }}</span>
+                    <span class="tryon-total-label">Saved Try-Ons</span>
+                </div>
+
+                <a
+                    href="{{ url_for('tryon_history.index') }}"
+                    class="dashboard-feature-button"
+                >
+                    View Try-On History →
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<style>
+
+.dashboard-feature-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 24px;
+    margin-top: 35px;
+}
+
+.dashboard-feature-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 28px;
+    background: linear-gradient(135deg, #fff7fb, #f8f5ff);
+    border: 1px solid #f0dff5;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(50, 30, 60, 0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.dashboard-feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 30px rgba(80, 40, 100, 0.13);
+}
+
+.dashboard-feature-icon {
+    font-size: 38px;
+    margin-bottom: 12px;
+}
+
+.dashboard-feature-card h2 {
+    color: #543565;
+    font-size: 22px;
+    margin: 0 0 12px;
+}
+
+.dashboard-feature-card p {
+    color: #716779;
+    line-height: 1.7;
+    margin: 0 0 22px;
+}
+
+.dashboard-feature-button {
+    display: inline-block;
+    margin-top: auto;
+    padding: 12px 18px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #a94bd0, #e56eb0);
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.dashboard-feature-button:hover {
+    opacity: 0.9;
+}
+
+.tryon-count-number {
+    font-size: 42px;
+    font-weight: 700;
+    color: #a94bd0;
+    margin: 12px 0 22px !important;
+}
+
+.tryon-total {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+    margin: 4px 0 20px;
+}
+
+.tryon-total-number {
+    font-size: 30px;
+    font-weight: 700;
+    color: #a94bd0;
+}
+
+.tryon-total-label {
+    font-size: 14px;
+    color: #716779;
+}
+
+@media (max-width: 650px) {
+    .dashboard-feature-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}

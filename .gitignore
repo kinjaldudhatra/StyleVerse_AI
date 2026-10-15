@@ -1,0 +1,9 @@
+venv/
+__pycache__/
+*.pyc
+.env
+*.log
+.vscode/
+.idea/
+
+static/images/outfits*.zip

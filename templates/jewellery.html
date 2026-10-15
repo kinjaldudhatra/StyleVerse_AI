@@ -1,0 +1,76 @@
+
+{% extends "base.html" %}
+
+{% block title %}Jewellery | StyleVerse AI{% endblock %}
+
+{% block content %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/jewellery.css') }}">
+
+<section class="jewellery-page">
+    <div class="jewellery-container">
+
+        <header class="jewellery-hero">
+            <span class="jewellery-eyebrow">THE ACCESSORY EDIT</span>
+            <h1>Little details.<br><span>Lasting elegance.</span></h1>
+            <p>
+                Discover jewellery inspiration for your everyday style,
+                special occasions, and unforgettable moments.
+            </p>
+            <a href="#jewellery-collection" class="jewellery-cta">
+                Explore the collection <span aria-hidden="true">↗</span>
+            </a>
+        </header>
+
+        <div class="jewellery-section-heading" id="jewellery-collection">
+            <div>
+                <span class="jewellery-eyebrow">CURATED FOR YOUR STYLE</span>
+                <h2>Find your finishing touch</h2>
+            </div>
+            <p>Six style directions to inspire your next look.</p>
+        </div>
+
+        <div class="jewellery-grid">
+            {% for item in jewellery_items %}
+            <article class="jewellery-card">
+                <div class="jewellery-art jewellery-art-{{ item.style }}">
+                    <span class="jewellery-art-icon"
+                          aria-hidden="true">{{ item.icon }}</span>
+                    <span class="jewellery-art-label">
+                        {{ item.category }}
+                    </span>
+                </div>
+
+                <div class="jewellery-card-content">
+                    <span class="jewellery-category">
+                        {{ item.category }}
+                    </span>
+                    <h3>{{ item.name }}</h3>
+                    <p>{{ item.description }}</p>
+                    <a class="jewellery-explore"
+                       href="#jewellery-collection">
+                        Explore style <span aria-hidden="true">→</span>
+                    </a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+
+        <aside class="jewellery-note">
+            <span class="jewellery-note-icon" aria-hidden="true">✧</span>
+            <div>
+                <h2>Your style, your signature.</h2>
+                <p>
+                    Pair your favourite accessories with outfits that
+                    express your personality.
+                </p>
+            </div>
+            <a href="{{ url_for('fashion.fashion_home') }}">
+                Explore fashion ↗
+            </a>
+        </aside>
+
+    </div>
+</section>
+{% endblock %}
+    

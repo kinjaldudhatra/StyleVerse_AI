@@ -1,0 +1,140 @@
+
+{% extends "base.html" %}
+
+{% block title %}My Profile | StyleVerse AI{% endblock %}
+
+{% block content %}
+<section class="profile-page">
+    <div class="profile-container">
+        <h1>My Profile ✨</h1>
+        <p>Personalize your StyleVerse AI experience.</p>
+
+        <form method="POST" class="profile-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <h2>Account Details</h2>
+
+            <label for="name">Full Name</label>
+            <input id="name" name="name" type="text"
+                   maxlength="100" required
+                   value="{{ user['name'] or '' }}">
+
+            <label for="email">Email Address</label>
+            <input id="email" type="email"
+                   value="{{ user['email'] }}" disabled>
+            <small>Your registered email cannot be changed here.</small>
+
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender" required>
+                <option value="">Select gender</option>
+                {% for option in ["Female", "Male"] %}
+                <option value="{{ option }}"
+                    {% if user['gender'] == option %}selected{% endif %}>
+                    {{ option }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <h2>Fashion Preferences</h2>
+
+            {% set fields = [
+                ("skin_tone", "Skin Tone", ["Fair", "Light", "Medium", "Olive", "Deep"]),
+                ("face_shape", "Face Shape", ["Oval", "Round", "Square", "Heart", "Diamond", "Oblong"]),
+                ("clothing_size", "Clothing Size", ["XS", "S", "M", "L", "XL", "XXL"]),
+                ("style_preference", "Style Preference", ["Casual", "Formal", "Traditional", "Western", "Streetwear", "Minimalist"]),
+                ("favorite_color", "Favorite Color", ["Black", "White", "Red", "Blue", "Pink", "Purple", "Green", "Yellow", "Brown", "Beige", "Other"]),
+                ("preferred_occasion", "Preferred Occasion", ["Daily Wear", "College", "Office", "Party", "Wedding", "Festive"])
+            ] %}
+
+            {% for field, label_text, options in fields %}
+            <label for="{{ field }}">{{ label_text }}</label>
+            <select id="{{ field }}" name="{{ field }}">
+                <option value="">Not specified</option>
+                {% for option in options %}
+                <option value="{{ option }}"
+                    {% if user[field] == option %}selected{% endif %}>
+                    {{ option }}
+                </option>
+                {% endfor %}
+            </select>
+            {% endfor %}
+
+            <button type="submit">Save Changes 💖</button>
+        </form>
+    </div>
+</section>
+
+<style>
+.profile-page {
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #fff7fb, #f8f5ff);
+}
+
+.profile-container {
+    max-width: 650px;
+    margin: auto;
+}
+
+.profile-container > h1,
+.profile-container > p {
+    text-align: center;
+}
+
+.profile-form {
+    margin-top: 25px;
+    padding: 28px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 28px rgba(50, 30, 60, 0.08);
+}
+
+.profile-form h2 {
+    color: #543565;
+    margin: 22px 0 16px;
+}
+
+.profile-form h2:first-child {
+    margin-top: 0;
+}
+
+.profile-form label {
+    display: block;
+    margin: 16px 0 7px;
+    font-weight: 600;
+    color: #543565;
+}
+
+.profile-form input,
+.profile-form select {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e5c9e5;
+    border-radius: 10px;
+    background: white;
+}
+
+.profile-form input:disabled {
+    background: #f5f1f6;
+    color: #716779;
+}
+
+.profile-form small {
+    display: block;
+    margin-top: 6px;
+    color: #716779;
+}
+
+.profile-form button {
+    width: 100%;
+    margin-top: 25px;
+    padding: 13px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #a94bd0, #e56eb0);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+</style>
+{% endblock %}

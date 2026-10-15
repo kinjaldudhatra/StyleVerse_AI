@@ -1,0 +1,902 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+Virtual Try-On | StyleVerse AI
+{% endblock %}
+
+{% block content %}
+<section class="virtual-tryon-page">
+    <div class="virtual-tryon-container">
+        <h1>Virtual Try-On ✨</h1>
+        <p>Preview your style before choosing your outfit.</p>
+
+        <div class="tryon-card">
+            <h2>Upload Your Photo</h2>
+
+            <input
+                type="file"
+                id="person-photo"
+                accept="image/*"
+            >
+
+            <div class="photo-preview">
+                <img
+                    id="photo-preview"
+                    alt="Your uploaded photo preview"
+                    hidden
+                >
+                <p id="preview-message">
+                    Your photo preview will appear here.
+                </p>
+            </div>
+        </div>
+        
+        <div class="tryon-card">
+            <h2>Live Camera Preview 📸</h2>
+            <p>Allow camera access to see yourself live.</p>
+
+            
+            <div class="camera-stage" id="camera-stage" hidden>
+                <video
+                    id="camera-preview"
+                    autoplay
+                    playsinline
+                    muted
+                ></video>
+
+                <canvas id="pose-canvas"></canvas>
+            </div>
+
+
+            <p id="camera-message">
+                Your camera is currently off.
+            </p>
+
+            <div class="camera-buttons">
+                <button type="button" id="start-camera">
+                    Start Camera
+                </button>
+
+                <button type="button" id="stop-camera" disabled>
+                    Stop Camera
+                </button>
+                
+                <button type="button" id="capture-photo" disabled>
+                    📸 Capture Photo
+                </button>
+                
+                <div id="captured-photo-section" hidden>
+                    <h3>Your Captured Photo</h3>
+                    <canvas id="captured-photo"></canvas>
+                    <p id="capture-message">
+                        Your captured photo will appear here.
+                    </p>
+                </div>
+                
+                <div class="outfit-overlay-controls">
+                    <h3>Try an Outfit 👗</h3>
+
+                    <label for="outfit-select">Choose an outfit:</label>
+
+                    <select id="outfit-select">
+                        <option value="">Select an outfit</option>
+                        <option value="6">Red Wrap Dress</option>
+                        <option value="7">Lavender Wrap Dress</option>
+                        <option value="8">Anarkali Suit</option>
+                        <option value="13">Blue Short Kurti</option>
+                        <option value="14">Striped Co-ord Set</option>
+                        <option value="17">Crop Top Wide Leg Jeans</option>
+                        <option value="19">Lavender Silk Saree</option>
+                        <option value="22">Maroon Embroidered Anarkali</option>
+                        <option value="23">Mint Green Sharara Set</option>
+                        <option value="24">Olive Kurta Palazzo</option>
+                        <option value="27">White Dress</option>
+                    </select>
+
+                    <button type="button" id="apply-outfit">
+                        Apply Outfit ✨
+                    </button>
+
+                    <p id="outfit-message">
+                        Capture a photo and choose an outfit.
+                    </p>
+                    
+                    
+                    <div id="ai-result-container" class="ai-result-container" hidden>
+                        <h3>Your AI Try-On Result ✨</h3>
+                        <p class="ai-result-subtitle">
+                            See how your selected outfit looks on you!
+                        </p>
+
+                        <div class="ai-comparison">
+                            <!-- Original photo -->
+                            <div class="ai-image-card">
+                                <h4>Before 👤</h4>
+                                <img
+                                    id="ai-original-image"
+                                    alt="Your original photo"
+                                >
+                            </div>
+
+                            <!-- AI-generated result -->
+                            <div class="ai-image-card">
+                                <h4>After ✨</h4>
+                                <img
+                                    id="ai-result-image"
+                                    alt="AI-generated virtual try-on result"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="ai-result-actions">
+                            <button type="button" id="view-full-result">
+                                View Full Size 🔍
+                            </button>
+
+                            <button type="button" id="download-ai-result">
+                                Download Result ⬇️
+                            </button>
+                            <button type="button" id="try-another-outfit">
+                                Try Another Outfit 👗
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Full-size image viewer -->
+                    <div id="ai-image-modal" class="ai-image-modal" hidden>
+                        <button type="button" id="close-ai-modal" aria-label="Close image viewer">
+                            ✕ Close
+                        </button>
+                        <img id="ai-modal-image" alt="Full-size AI try-on result">
+                    </div>
+
+
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<style>
+.virtual-tryon-page {
+    min-height: 80vh;
+    padding: 50px 20px;
+    background: linear-gradient(135deg, #fff7fb, #f8f5ff);
+}
+
+.virtual-tryon-container {
+    max-width: 850px;
+    margin: auto;
+    text-align: center;
+}
+
+.tryon-card {
+    margin-top: 30px;
+    padding: 30px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 28px rgba(50, 30, 60, 0.08);
+}
+
+.photo-preview {
+    margin-top: 24px;
+    min-height: 200px;
+}
+
+.photo-preview img {
+    display: block;
+    max-width: 100%;
+    max-height: 450px;
+    margin: auto;
+    border-radius: 12px;
+}
+
+#person-photo {
+    max-width: 100%;
+}
+#camera-preview {
+    display: block;
+    width: 100%;
+    max-width: 450px;
+    margin: 20px auto;
+    border-radius: 16px;
+    background: #f3edf5;
+    transform: scaleX(-1);
+}
+
+.camera-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.camera-buttons button {
+    padding: 12px 22px;
+    border: none;
+    border-radius: 10px;
+    background: #9e21acbb;
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.camera-buttons button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.camera-stage {
+    position: relative;
+    width: 100%;
+    max-width: 450px;
+    margin: 20px auto;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #f3edf5;
+}
+
+.camera-stage video {
+    display: block;
+    width: 100%;
+    height: auto;
+    transform: scaleX(-1);
+}
+
+#pose-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: scaleX(-1);
+    pointer-events: none;
+}
+
+#captured-photo-section {
+    margin-top: 24px;
+}
+
+#captured-photo {
+    display: block;
+    width: 100%;
+    max-width: 350px;
+    height: auto;
+    margin: 16px auto;
+    border-radius: 14px;
+    background: #f3edf5;
+}
+
+#capture-photo {
+    padding: 12px 22px;
+    border: none;
+    border-radius: 10px;
+    background: #ec4899;
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+}
+.outfit-overlay-controls {
+    margin-top: 24px;
+    padding: 20px;
+    border-radius: 16px;
+    background: #fff7fb;
+}
+
+#outfit-select {
+    display: block;
+    width: 100%;
+    max-width: 350px;
+    margin: 12px auto;
+    padding: 12px;
+    border: 1px solid #e5c9e5;
+    border-radius: 10px;
+}
+
+#apply-outfit {
+    padding: 12px 22px;
+    border: none;
+    border-radius: 10px;
+    background: #a855f7;
+    color: white;
+    cursor: pointer;
+}
+
+#ai-result-container {
+    margin-top: 24px;
+    padding: 20px;
+    background: #fff7fb;
+    border-radius: 18px;
+}
+
+#ai-result-image {
+    display: block;
+    width: 100%;
+    max-width: 520px;
+    height: auto;
+    margin: 16px auto 0;
+    border-radius: 14px;
+    object-fit: contain;
+    image-rendering: auto;
+    box-shadow: 0 8px 24px rgba(50, 30, 60, 0.12);
+}
+
+/* StyleVerse AI — Virtual Try-On results */
+
+.ai-result-container {
+    width: 100%;
+    margin: 28px auto;
+    padding: 24px;
+    border-radius: 22px;
+    background: #fff;
+    box-shadow: 0 12px 35px rgba(80, 40, 100, 0.10);
+    text-align: center;
+}
+
+.ai-result-subtitle {
+    color: #716779;
+    margin: 8px 0 22px;
+}
+
+.ai-comparison {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    align-items: start;
+}
+
+.ai-image-card {
+    min-width: 0;
+    padding: 14px;
+    border-radius: 16px;
+    background: #fbf7fc;
+}
+
+.ai-image-card h4 {
+    margin: 0 0 12px;
+    color: #543565;
+}
+
+.ai-image-card img {
+    display: block;
+    width: 100%;
+    max-height: 650px;
+    object-fit: contain;
+    border-radius: 12px;
+    background: #f3eef5;
+}
+
+.ai-result-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.ai-result-actions button,
+#close-ai-modal {
+    border: none;
+    border-radius: 10px;
+    padding: 12px 18px;
+    color: white;
+    background: linear-gradient(135deg, #a94bd0, #e56eb0);
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.ai-image-modal[hidden],
+.ai-result-container[hidden] {
+    display: none !important;
+}
+
+.ai-image-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 24px;
+    background: rgba(20, 12, 25, 0.94);
+}
+
+.ai-image-modal img {
+    max-width: 95%;
+    max-height: 82vh;
+    object-fit: contain;
+    border-radius: 12px;
+}
+
+@media (max-width: 650px) {
+    .ai-comparison {
+        grid-template-columns: 1fr;
+    }
+
+    .ai-result-container {
+        padding: 14px;
+    }
+}
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const input = document.getElementById("person-photo");
+    const preview = document.getElementById("photo-preview");
+    const message = document.getElementById("preview-message");
+
+    let currentImageUrl = null;
+
+    input.addEventListener("change", function () {
+        const file = input.files[0];
+
+        if (!file) return;
+
+        if (!file.type.startsWith("image/")) {
+            alert("Please select an image file.");
+            input.value = "";
+            return;
+        }
+
+        if (currentImageUrl) {
+            URL.revokeObjectURL(currentImageUrl);
+        }
+
+        currentImageUrl = URL.createObjectURL(file);
+        preview.src = currentImageUrl;
+        preview.hidden = false;
+        message.hidden = true;
+    });
+});
+const video = document.getElementById("camera-preview");
+const startButton = document.getElementById("start-camera");
+const stopButton = document.getElementById("stop-camera");
+let latestPoseLandmarks = null;
+const cameraMessage = document.getElementById("camera-message");
+
+const cameraStage = document.getElementById("camera-stage");
+const canvas = document.getElementById("pose-canvas");
+const canvasCtx = canvas.getContext("2d");
+
+const captureButton = document.getElementById("capture-photo");
+const capturedCanvas = document.getElementById("captured-photo");
+const capturedSection = document.getElementById("captured-photo-section");
+const captureMessage = document.getElementById("capture-message");
+let capturedBaseImage = null;
+
+captureButton.addEventListener("click", function () {
+    if (!cameraStream || video.readyState < 2) {
+        captureMessage.textContent = "Start the camera first.";
+        capturedSection.hidden = false;
+        return;
+    }
+
+    capturedCanvas.width = video.videoWidth;
+    capturedCanvas.height = video.videoHeight;
+
+    const ctx = capturedCanvas.getContext("2d");
+
+    // Mirror the captured image to match the selfie preview.
+    ctx.save();
+    ctx.translate(capturedCanvas.width, 0);
+    ctx.scale(-1, 1);
+    ctx.drawImage(
+        video,
+        0,
+        0,
+        capturedCanvas.width,
+        capturedCanvas.height
+    );
+    ctx.restore();
+    capturedBaseImage = ctx.getImageData(
+        0,
+        0,
+        capturedCanvas.width,
+        capturedCanvas.height
+    );
+
+    capturedSection.hidden = false;
+    captureMessage.textContent = "Photo captured successfully! ✨";
+});
+
+let poseDetector = null;
+let processingFrame = false;
+
+if (typeof Pose !== "undefined") {
+    poseDetector = new Pose({
+        locateFile: (file) =>
+            `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`
+    });
+
+    
+    poseDetector.setOptions({
+        modelComplexity: 0,
+        smoothLandmarks: false,
+        enableSegmentation: false,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5
+    });
+
+
+    poseDetector.onResults((results) => {
+        latestPoseLandmarks = results.poseLandmarks || null;
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        canvasCtx.clearRect(
+            0, 0, canvas.width, canvas.height
+        );
+
+        if (results.poseLandmarks) {
+            drawConnectors(
+                canvasCtx,
+                results.poseLandmarks,
+                POSE_CONNECTIONS,
+                { color: "#00FF88", lineWidth: 4 }
+            );
+
+            drawLandmarks(
+                canvasCtx,
+                results.poseLandmarks,
+                {
+                    color: "#FF4FA3",
+                    fillColor: "#FFFFFF",
+                    lineWidth: 2,
+                    radius: 4
+                }
+            );
+
+            cameraMessage.textContent =
+                "Body detected! Pose landmarks are visible.";
+        } else {
+            cameraMessage.textContent =
+                "Camera running. Move into full view for pose detection.";
+        }
+    });
+}
+
+
+async function processPoseFrames() {
+    if (!cameraStream || !poseDetector) {
+        processingFrame = false;
+        return;
+    }
+
+    if (video.readyState >= 2 && !processingFrame) {
+        processingFrame = true;
+
+        try {
+            await poseDetector.send({ image: video });
+        } catch (error) {
+            console.error("Pose detection error:", error);
+        } finally {
+            processingFrame = false;
+        }
+    }
+
+    if (cameraStream) {
+        setTimeout(processPoseFrames, 50);
+    }
+}
+
+
+let cameraStream = null;
+
+
+startButton.addEventListener("click", async function () {
+    startButton.disabled = true;
+    cameraMessage.textContent = "Opening camera...";
+
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                width: { ideal: 640 },
+                height: { ideal: 480 },
+                frameRate: { ideal: 24, max: 30 }
+            },
+            audio: false
+        });
+
+        cameraStream = stream;
+        video.srcObject = stream;
+        cameraStage.hidden = false;
+
+        video.onloadedmetadata = async function () {
+            try {
+                await video.play();
+
+                cameraMessage.textContent = "Camera is running!";
+                stopButton.disabled = false;
+                captureButton.disabled = false;
+
+                if (poseDetector) {
+                    processPoseFrames();
+                } else {
+                    cameraMessage.textContent =
+                        "Camera is running. Pose detector is unavailable.";
+                }
+            } catch (error) {
+                console.error("Video playback error:", error);
+                cameraMessage.textContent = "Could not start video playback.";
+                startButton.disabled = false;
+            }
+        };
+
+    } catch (error) {
+        console.error("Camera error:", error);
+        cameraMessage.textContent =
+            "Could not open camera. Check browser permissions.";
+        startButton.disabled = false;
+        stopButton.disabled = true;
+    }
+});
+
+
+
+stopButton.addEventListener("click", function () {
+    console.log("Stop Camera clicked!");
+
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(track => {
+            track.stop();
+        });
+        cameraStream = null;
+    }
+
+    video.pause();
+    video.srcObject = null;
+    video.hidden = true;
+
+    cameraStage.hidden = true;
+
+    canvasCtx.clearRect(
+        0, 0, canvas.width, canvas.height
+    );
+
+    cameraMessage.textContent = "Your camera is currently off.";
+    startButton.disabled = false;
+    stopButton.disabled = true;
+    captureButton.disabled = true;
+});
+
+
+window.addEventListener("beforeunload", function () {
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+    }
+});
+
+const outfitSelect = document.getElementById("outfit-select");
+const applyOutfitButton = document.getElementById("apply-outfit");
+const outfitMessage = document.getElementById("outfit-message");
+
+
+
+let aiResultUrl = null;
+let originalPhotoUrl = null;
+
+applyOutfitButton.addEventListener("click", async function () {
+    const personInput = document.getElementById("person-photo");
+    const selectedOutfitId = outfitSelect.value;
+    const uploadedPhoto = personInput.files[0];
+
+    if (!selectedOutfitId) {
+        outfitMessage.textContent = "Please select an outfit first.";
+        return;
+    }
+
+    if (!uploadedPhoto && !capturedBaseImage) {
+        outfitMessage.textContent =
+            "Please upload a photo or capture one using your camera.";
+        return;
+    }
+
+    const formData = new FormData();
+    let personBlob;
+    let personFilename;
+
+    try {
+        applyOutfitButton.disabled = true;
+        applyOutfitButton.textContent = "Generating AI Try-On...";
+        outfitMessage.textContent =
+            "Please wait! AI is creating your virtual try-on. ✨";
+
+        if (uploadedPhoto) {
+            personBlob = uploadedPhoto;
+            personFilename = uploadedPhoto.name || "person-photo.jpg";
+        } else {
+            personBlob = await new Promise((resolve, reject) => {
+                capturedCanvas.toBlob(
+                    blob => blob
+                        ? resolve(blob)
+                        : reject(new Error(
+                            "Could not process the captured photo."
+                        )),
+                    "image/jpeg",
+                    0.92
+                );
+            });
+            personFilename = "captured-photo.jpg";
+        }
+
+        formData.append("outfit_id", selectedOutfitId);
+        formData.append("csrf_token", "{{ csrf_token() }}");
+        formData.append("garment_photo_type", "model");
+        formData.append("person_image", personBlob, personFilename);
+
+        const response = await fetch(
+            "{{ url_for('virtual_tryon.generate_tryon') }}",
+            {
+                method: "POST",
+                body: formData
+            }
+        );
+
+        if (!response.ok) {
+            let errorMessage = "AI try-on failed. Please try again.";
+
+            try {
+                const errorData = await response.json();
+                errorMessage = errorData.error || errorMessage;
+            } catch (_) {}
+
+            throw new Error(errorMessage);
+        }
+
+        const resultBlob = await response.blob();
+
+        if (!resultBlob.type.startsWith("image/")) {
+            throw new Error("The AI service did not return an image.");
+        }
+
+        // Release URLs from the previous result.
+        if (aiResultUrl) URL.revokeObjectURL(aiResultUrl);
+        if (originalPhotoUrl) URL.revokeObjectURL(originalPhotoUrl);
+
+        // Create URLs for the new images.
+        aiResultUrl = URL.createObjectURL(resultBlob);
+        originalPhotoUrl = URL.createObjectURL(personBlob);
+
+        document.getElementById("ai-original-image").src =
+            originalPhotoUrl;
+        document.getElementById("ai-result-image").src =
+            aiResultUrl;
+
+        const resultContainer =
+            document.getElementById("ai-result-container");
+
+        resultContainer.hidden = false;
+
+        outfitMessage.textContent =
+            "Your AI-generated try-on is ready! 💖";
+
+        resultContainer.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+    } catch (error) {
+        console.error("AI try-on error:", error);
+        outfitMessage.textContent = error.message ||
+            "Something went wrong. Please try again.";
+    } finally {
+        applyOutfitButton.disabled = false;
+        applyOutfitButton.textContent = "Apply Outfit ✨";
+    }
+});
+
+
+// Open the full-size AI result.
+document.getElementById("view-full-result").addEventListener(
+    "click",
+    function () {
+        if (!aiResultUrl) return;
+
+        document.getElementById("ai-modal-image").src = aiResultUrl;
+        document.getElementById("ai-image-modal").hidden = false;
+    }
+);
+
+
+// Close the full-size viewer.
+document.getElementById("close-ai-modal").addEventListener(
+    "click",
+    function () {
+        document.getElementById("ai-image-modal").hidden = true;
+    }
+);
+
+
+// Close the viewer when clicking outside the image.
+document.getElementById("ai-image-modal").addEventListener(
+    "click",
+    function (event) {
+        if (event.target === this) {
+            this.hidden = true;
+        }
+    }
+);
+
+
+// Download the generated result.
+document.getElementById("download-ai-result").addEventListener(
+    "click",
+    function () {
+        if (!aiResultUrl) {
+            outfitMessage.textContent =
+                "Generate a try-on image before downloading.";
+            return;
+        }
+
+        const link = document.createElement("a");
+        link.href = aiResultUrl;
+        link.download = "styleverse-ai-tryon.png";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+    }
+);
+
+/* Try another outfit without reloading the page */
+document.getElementById("try-another-outfit").addEventListener(
+    "click",
+    function () {
+        const outfitSelect = document.getElementById("outfit-select");
+
+        // Scroll back to outfit selection.
+        outfitSelect.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+        outfitSelect.focus();
+
+        outfitMessage.textContent =
+            "Choose another outfit and click Apply Outfit ✨";
+    }
+);
+
+
+/* Click either comparison image to zoom */
+function openImageZoom(imageUrl, altText) {
+    if (!imageUrl) return;
+
+    const modal = document.getElementById("ai-image-modal");
+    const modalImage = document.getElementById("ai-modal-image");
+
+    modalImage.src = imageUrl;
+    modalImage.alt = altText;
+    modal.hidden = false;
+}
+
+document.getElementById("ai-original-image").addEventListener(
+    "click",
+    function () {
+        openImageZoom(
+            originalPhotoUrl,
+            "Your original photo"
+        );
+    }
+);
+
+document.getElementById("ai-result-image").addEventListener(
+    "click",
+    function () {
+        openImageZoom(
+            aiResultUrl,
+            "AI-generated virtual try-on result"
+        );
+    }
+);
+
+
+</script>
+{% endblock %}
